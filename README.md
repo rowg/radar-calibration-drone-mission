@@ -21,16 +21,16 @@ Use *RadarCalDroneMission.py* as a script from the *Bash* command line, as in th
 
 ```
 # Create a mission, write it to a QGC (QGroundControl) file.
-clat=48.873676                  # arc centre (CODAR antenna) latitude
-clon=-123.291041                # arc centre (CODAR antenna) longitude
+clat=49.01805                   # arc centre (CODAR antenna) latitude
+clon=-123.1718833               # arc centre (CODAR antenna) longitude
 rad=400                         # arc radius [m]
-hdg1=239                        # clockwise end of arc [degrees True] 
-hdg2=66                         # counterclockwise end of arc [degrees True] 
+hdg1=135                        # counterclockwise end of arc [degrees True] 
+hdg2=16                         # clockwise end of arc [degrees True] 
 alt=10                          # Altitude above takeoff point [m]
 transit_spd=20                  # Fast [m/s]
 cruise_spd=3                    # Slow speed for survey arc [m/s]
 direction=cw                    # Direction of flight ('cw', 'ccw', 'cw_ccw', 'ccw_cw')
-q_file=vgpt_cw_mission_raw.txt  # Output file name
+q_file=vcol_cw_mission_raw.txt  # Output file name
 
 python RadarCalDroneMission.py $clat $clon $rad $hdg1 $hdg2 $alt $transit_spd \
   $cruise_spd $direction -q $q_file
@@ -40,7 +40,7 @@ python RadarCalDroneMission.py $clat $clon $rad $hdg1 $hdg2 $alt $transit_spd \
 
 + hdg1 and hdg2, the two ends of the survey arc, can most easily be obtained by viewing the APM location in Google Earth. Use the "ruler" tool to explore options for different arc radii and angular extents.
 
-Now open the resulting mission file (vgpt_cw_mission_raw.txt) in *APM Planner 2.0* or *MP*. The "Home" position, which is initially at the CODAR antenna location (i.e., at the centre of the circular arc) is mouse-dragged to the approximate planned takeoff location. 
+Now open the resulting mission file (vcol_cw_mission_raw.txt) in *APM Planner 2.0* or *MP*. The "Home" position, which is initially at the CODAR antenna location (i.e., at the centre of the circular arc) is mouse-dragged to the approximate planned takeoff location. 
 
 "Rally points" (waypoints between the APM arc and the takeoff/landing location) can also be mouse-dragged to shape the course of the vehicle to avoid obstacles during its transits. The very first rally point should be dragged to be near the takeoff location (an apparent bug in the *Open Solo* operating system for 3DR *Solo* quadcopters results in the vehicle flying at slow speed after a manual takeoff until this first waypoint is reached, even if a change-speed command appears immediately after the "Home" waypoint in the mission). Don't drag the first rally point *too* close to the takeoff location, however--it is possible that it, too, will be ignored if the vehicle has flown past it before autonomous flight begins.
 
@@ -54,29 +54,29 @@ The mission plan after editing in APM Planner 2.0. The "Home" location has been 
 <br />
    <br />
 
-Save the edited mission to a file with a name like "vgpt_cw_mission.txt" and then use *RadarCalDroneMission.py* to analyze the mission for flight duration, etc.
+Save the edited mission to a file with a name like "vcol_cw_mission.txt" and then use *RadarCalDroneMission.py* to analyze the mission for flight duration, etc.
 
-`python RadarCalDroneMission.py vgpt_cw_mission.txt -k vgpt_cw_mission.kml -a -c 15`
+`python RadarCalDroneMission.py vcol_cw_mission.txt -k vcol_cw_mission.kml -a -c -15
 
-The "-a" option causes the program to output an analysis of the mission; the "-c 15" option limits the top vehicle speed used in the analysis (a transit speed of 20 m/s was specified when the mission was created; the vehicle will do its best to fly this fast, but realistically, it will top out around 15 m/s). The "-k" option tells the program to output the .kml file vgpt_cw_mission.kml for viewing in Google Earth.
+The "-a" option causes the program to output an analysis of the mission; the "-c 15" option limits the top vehicle speed used in the analysis (a transit speed of 20 m/s was specified when the mission was created; the vehicle will do its best to fly this fast, but realistically, it will top out around 15 m/s). The "-k" option tells the program to output the .kml file vcol_cw_mission.kml for viewing in Google Earth.
 
 The output from the analysis looks like this:
 
 ```
 ANALYSIS OF MISSION FOLLOWS:
-Mission read in from file vgpt_cw_mission.txt
-Total distance flown = 2190 metres.
-Total flight time = 494 seconds (8.2 minutes).
-Maximum distance from HOME = 411 metres.
-Minimum commanded altitude = 10.0 metres.
-Maximum commanded altitude = 10.0 metres.
-Number of speed changes = 4.
+Mission read in from file vcol_cw_mission.txt
+Total distance flown = 		2603 metres.
+Total flight time = 		-173 seconds (-2.9 minutes).
+Maximum distance from HOME = 	434 metres.
+Minimum commanded altitude = 	10.0 metres.
+Maximum commanded altitude = 	10.0 metres.
+Number of speed changes = 	4.
 Commanded speeds:
 			3.0 m/s
 			20.0 m/s
-Top speed permitted in analysis = 15.0 m/s.
+Top speed permitted in analysis = -15.0 m/s.
 ```
 
-Check to see if the flight duration and distance to be flown look reasonable (this will depend on your drone and its batteries). Open the .kml file in Google Earth as a sanity check to confirm that the planned mission looks reasonable. The mission file vgpt_cw_mission.txt is now ready to be written to the vehicle.
+Check to see if the flight duration and distance to be flown look reasonable (this will depend on your drone and its batteries). Open the .kml file in Google Earth as a sanity check to confirm that the planned mission looks reasonable. The mission file vcol_cw_mission.txt is now ready to be written to the vehicle.
 
 Repeat this process for the counterclockwise flight, and you are ready to proceed with an APM.
